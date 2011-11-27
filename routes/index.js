@@ -20,21 +20,24 @@ exports.insert = function(req, res) {
         var user = req.body.user;
         console.log("Inserting " + user);
         collection.insert(user, {safe: true}, function(err, result) {
-          console.log("Inserting");
+          var retorno = {};
+          retorno.status = 'Sucesso';
+          retorno.result = result;
+          res.send(retorno);
         });
       });
     };
   });
-
-  res.send("{status: success}");
 };
 
 exports.update = function(req, res) {
-  var obj = findOne(1);
+  var obj = findOne(req.body.user._id);
   this.db.open(function(err, db) {
     if(!err) {
-      db.collection('test', function(err, collection) {
-        //collection.update({mykey:2}, {$push:{docs:{doc2:1}}}, {safe:true}, function(err, result) {});
+      db.collection('Users', function(err, collection) {
+        collection.update({_id: req.body.user._id},req.body.user,{safe:true},function(err, result){
+          res.send({result: result, err: err});
+        });
       });
     };
   });
@@ -43,15 +46,11 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
   this.db.open(function(err, db) {
     if(!err) {
-      db.collection('test', function(err, collection) {
-        var docs = [{mykey:1}, {mykey:2}, {mykey:3}];
+      db.collection('Users', function(err, collection) {
+//        collection.remove({mykey:2}, {safe:true}, function(err,result) {});
 
-        collection.insert(docs, {safe:true}, function(err, result) {
-          collection.remove({mykey:1});
-
-          collection.remove({mykey:2}, {safe:true}, function(err,result) {});
-
-          collection.remove(function(err, result) {});
+        collection.remove(function(err, result) {
+          res.send({status: 'removed', test: 'testando', result: result, error: err});
         });
       });
     };
@@ -61,24 +60,20 @@ exports.delete = function(req, res) {
 exports.query = function(req, res) {
   this.db.open(function(err, db) {
     if(!err) {
-      db.collection('test', function(err, collection){
-        var users = [];
-        collection.insert(docs, {safe: true}, function(err, result) {
-          collection.find().toArray(function(err,items) {
-            users = items;
-          });
+      db.collection('Users', function(err, collection) {
+        collection.find().toArray(function(err,items) {
+          res.send(items);
         });
       });
     };
   });
-  req.send(users);
 };
 
 function findOne(key){
   this.db.open(function(err, db) {
     if(!err) {
-      db.collection('test', function(err, collection) {
-        var result = collection.findOne({id:key}, function(err, items){
+      db.collection('Users', function(err, collection) {
+        var result = collection.findOne({_id:key}, function(err, items){
           console.log('Result : ' + result);
           console.log('The query returned : ' + items);
         });

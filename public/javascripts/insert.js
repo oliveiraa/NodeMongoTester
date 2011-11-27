@@ -1,33 +1,45 @@
 function insert(user){
-  console.log('Inserting : ' + user.name);
+  $.post('/mongo/insert',user,function(data){
+    console.log(data);
+  });
 };
 
 function update(user){
- console.log('Updating : ' + user);
+  $.post('/mongo/update',user,function(data){
+    console.log(data);
+  });
 };
 
 function remove(user){
-  console.log('Deleting : ' + user);
+  $.post('/mongo/delete',user,function(data) {
+    console.log(data);
+  });
 };
 
 function select(){
-  console.log('Selecting')
+  $.get('/mongo/query',function(data){
+    $(data).each(function(index,item){
+      console.log(item);
+    });
+  });
 };
 
 $(function() {
   $('#btnSend').click(function(event) {
     event.preventDefault();
     var user = {};
-    user.id = $('#txtId').val();
+    user._id = $('#txtId').val();
     user.name = $('#txtName').val();
     user.description = $('#txtDescription').val();
+    var data = {};
+    data.user = user;
 
     switch($('#sOperation').val()) {
-      case 'insert': insert(user);
+      case 'insert': insert(data);
         break;
-      case 'update': update(user);
+      case 'update': update(data);
         break;
-      case 'remove': remove(user);
+      case 'remove': remove(data);
         break;
 
       case 'select': select();
