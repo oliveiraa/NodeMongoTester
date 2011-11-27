@@ -1,0 +1,23 @@
+div(class='operation')
+  select(id='sOperation')
+    option(value='insert') Insert
+    option(value='update') Update
+    option(value='remove') Delete
+    option(value='select') Select
+
+div(class='data')
+  div(class='content')
+    label(for='txtId') Id:
+    input(type='text', id='txtId')
+  div(class='content')
+    label(for='txtName') Name:
+    input(type='text', id='txtName')
+  div(class='content')
+    label(for='txtName') Description:
+    input(type='text', id='txtDescription')
+  br
+  input(type='submit', value='Submit', id='btnSend')
+
+div(class='result')
+
+script(type='text/javascript', src='/javascripts/insert.js')
